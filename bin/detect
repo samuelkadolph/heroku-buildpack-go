@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+$:.unshift(File.expand_path("../../lib", __FILE__))
+require "go/commands/detect"
+
+build = ARGV.shift
+Go::Commands::Detect.new(build: build).run

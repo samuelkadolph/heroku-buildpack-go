@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+$:.unshift(File.expand_path("../../lib", __FILE__))
+require "go/tools/subversion"
+
+Go::Tools::Subversion.new(ENV["CACHE"]).run(*ARGV)

@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+$:.unshift(File.expand_path("../../lib", __FILE__))
+require "go/tools/mercurial"
+
+Go::Tools::Mercurial.new(ENV["CACHE"]).run(*ARGV)
