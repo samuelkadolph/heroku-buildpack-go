@@ -7,9 +7,6 @@ module Go
   class Application
     include Helper
 
-    ADDONS = []
-    CONFIG = { "PATH" => "/app/.heroku/bin:/usr/local/bin:/usr/bin:/bin" }
-
     class << self
       attr_reader :goversion
 
@@ -51,8 +48,8 @@ module Go
     def release
       eval_gofile!
       values = {}
-      values["addons"] = ADDONS
-      values["config_vars"] = CONFIG
+      values["addons"] = {}
+      values["config_vars"] = { "PATH" => "/app/bin:/usr/local/bin:/usr/bin:/bin" }
       values["default_process_types"] = { "web" => "#{File.basename(package)}" }
       values
     end
@@ -69,7 +66,7 @@ module Go
     def fetch_go
       return if File.directory?(goroot)
 
-      action "Fetching Go #{self.class.goversion}..." do
+      action "Fetching Go #{self.class.goversion}" do
         system! "rm", "-rf", "#{cache}/go"
         system! "mkdir", "-p", "#{cache}/go"
         Dir.chdir("#{cache}/go") do
@@ -82,20 +79,20 @@ module Go
     end
 
     def build_app
-      action "Building Go app..." do
+      action "Building Go app" do
         system! "mkdir", "-p", packagepath
         system! "cp", "-r", Dir[File.join(build, "{.git,*}")], packagepath
         Dir.chdir(packagepath) do
           system! "go", "get", "./..."
         end
         system! "mkdir", "-p", binpath
-        system! "cp", Dir[File.join(gopath, "bin", "*")] , binpath
+        system! "cp", Dir[File.join(gopath, "bin", "*")], binpath
       end
     end
 
     private
     def binpath
-      File.join(build, ".go-#{id}", "bin")
+      File.join(build, "bin")
     end
 
     def buildpack

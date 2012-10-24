@@ -11,7 +11,7 @@ module Go
     end
 
     def action(message)
-      print "-----> #{message} "
+      print "-----> #{message}... "
       yield
       puts "done"
     rescue

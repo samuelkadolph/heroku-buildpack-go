@@ -13,7 +13,7 @@ module Go
         attr_reader :bin, :executable, :name, :packages, :version
 
         def path
-          "tools/#{name}-#{version}"
+          File.join("tools", "#{name}-#{version}")
         end
 
         private
@@ -35,22 +35,18 @@ module Go
 
       def run(*args)
         install unless installed?
-        # use exec for now but use something else later so we can prefix the padding
         exec(File.join(@cache, self.class.path, self.class.bin, self.class.executable), *args)
       end
 
       def install
-        print "-----> Fetching #{self.class.name} #{self.class.version}... "
-        chdir do
-          self.class.packages.each do |package|
-            deb = download(package)
-            extract(deb)
+        action "Fetching #{self.class.name} #{self.class.version}" do
+          chdir do
+            self.class.packages.each do |package|
+              deb = download(package)
+              extract(deb)
+            end
           end
         end
-        puts "done"
-      rescue => e
-        puts "failed"
-        raise
       end
 
       def installed?
