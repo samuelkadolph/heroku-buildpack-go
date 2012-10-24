@@ -50,7 +50,7 @@ module Go
       values = {}
       values["addons"] = {}
       values["config_vars"] = { "PATH" => "/app/bin:/usr/local/bin:/usr/bin:/bin" }
-      values["default_process_types"] = { "web" => "#{File.basename(package)}" }
+      values["default_process_types"] = { "app" => "#{File.basename(package)}" }
       values
     end
 
